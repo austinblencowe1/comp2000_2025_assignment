@@ -1,6 +1,5 @@
 import java.awt.Dimension;
 import java.awt.Graphics;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -13,7 +12,7 @@ public class Main extends JFrame {
     class Canvas extends JPanel {
       Stage stage = new Stage();
       public Canvas() {
-        setPreferredSize(new Dimension(720, 720));
+        setPreferredSize(new Dimension(1024, 720));
       }
 
       @Override
