@@ -1,11 +1,18 @@
 import java.awt.Graphics;
 import java.util.*;
 
+//represents a ghost that chases the player
 public class Ghost {
-    private int col, row;
-    private Actor sprite; // Cat or Dog
+    //current column of the ghost
+    private int col;
+    //current row of the ghost
+    private int row;
+    //actor sprite for the ghost (cat or dog)
+    private Actor sprite;
+    //reference to the game grid
     private Grid grid;
 
+    //constructor initializes ghost position and sprite
     public Ghost(int col, int row, Grid grid, Actor sprite) {
         this.col = col;
         this.row = row;
@@ -13,6 +20,7 @@ public class Ghost {
         this.sprite = sprite;
     }
 
+    //updates ghost position to chase the player
     public void tick(int playerCol, int playerRow) {
         int[] nextStep = findNextStep(playerCol, playerRow);
         if (nextStep != null) {
@@ -21,6 +29,7 @@ public class Ghost {
         }
     }
 
+    //finds the next step towards the player using bfs
     private int[] findNextStep(int targetCol, int targetRow) {
         boolean[][] visited = new boolean[20][20];
         int[][] prevCol = new int[20][20];
@@ -53,9 +62,7 @@ public class Ghost {
             }
         }
 
-        if (!visited[targetRow][targetCol]) {
-            return null;
-        }
+        if (!visited[targetRow][targetCol]) return null;
 
         int c = targetCol;
         int r = targetRow;
@@ -68,16 +75,15 @@ public class Ghost {
         return new int[]{c, r};
     }
 
+    //paints the ghost's sprite
     public void paint(Graphics g) {
         sprite.setCell(grid.cellAtColRow(col, row).get());
         sprite.paint(g);
     }
 
-    public int getCol() { 
-        return col; 
-    }
-    
-    public int getRow() { 
-        return row; 
-    }
+    //gets the current column
+    public int getCol() { return col; }
+
+    //gets the current row
+    public int getRow() { return row; }
 }

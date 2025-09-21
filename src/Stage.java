@@ -3,17 +3,28 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
+//manages the game state and rendering
 public class Stage {
+    //game grid
     Grid grid;
+    //player character
     Player player;
+    //list of ghosts
     List<Ghost> ghosts;
+    //indicates if the game is over
     boolean gameOver = false;
+    //indicates if the game is won
     boolean gameWon = false;
+    //counts game ticks for ghost movement
     int tickCounter = 0;
+    //start time of the game
     Long startTime;
+    //end time of the game
     Long endTime;
+    //controls ghost movement speed
     int ghostSpeed = 15;
 
+    //constructor initializes the game
     public Stage() {
         grid = new Grid();
         player = new Player(1, 1, grid);
@@ -23,6 +34,7 @@ public class Stage {
         startTime = System.currentTimeMillis();
     }
 
+    //updates game state each tick
     public void tick() {
         if (gameOver || gameWon) {
             if (endTime == null) endTime = System.currentTimeMillis();
@@ -42,6 +54,7 @@ public class Stage {
         if (grid.getTotalPellets() == 0) gameWon = true;
     }
 
+    //paints the game elements
     public void paint(Graphics g, Point mousePos) {
         grid.paint(g, mousePos);
         player.paint(g);
@@ -68,10 +81,16 @@ public class Stage {
         }
     }
 
+    //gets the player object
     public Player getPlayer() { return player; }
+
+    //checks if the game is over
     public boolean isGameOver() { return gameOver; }
+
+    //checks if the game is won
     public boolean isGameWon() { return gameWon; }
 
+    //sets the ghost movement speed
     public void setGhostSpeed(int speed) {
         if (speed > 0) ghostSpeed = speed;
     }

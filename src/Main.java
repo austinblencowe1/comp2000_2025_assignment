@@ -3,9 +3,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.*;
 
+//main class for the game window
 public class Main extends JFrame {
+    //game stage containing grid and actors
     Stage stage;
 
+    //main method to launch the game
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Main window = new Main();
@@ -13,13 +16,16 @@ public class Main extends JFrame {
         });
     }
 
+    //canvas class for rendering the game
     class Canvas extends JPanel {
+        //constructor sets up canvas and ui
         public Canvas() {
             setPreferredSize(new Dimension(1024, 720));
             addKeyListener(stage.getPlayer());
             setFocusable(true);
             requestFocusInWindow();
 
+            //difficulty selection dropdown
             String[] speeds = {"Easy", "Medium", "Hard"};
             JComboBox<String> difficultyBox = new JComboBox<>(speeds);
             difficultyBox.setBounds(730, 160, 120, 25);
@@ -35,6 +41,7 @@ public class Main extends JFrame {
             add(difficultyBox);
         }
 
+        //paints the game stage
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
@@ -42,6 +49,7 @@ public class Main extends JFrame {
         }
     }
 
+    //constructor initializes the game window
     private Main() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         stage = new Stage();
@@ -52,6 +60,7 @@ public class Main extends JFrame {
         canvas.requestFocusInWindow();
     }
 
+    //starts the game loop
     public void run() {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
