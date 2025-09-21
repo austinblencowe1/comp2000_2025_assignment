@@ -1,11 +1,8 @@
-//represents a collectible pellet
 public class Pellet implements Collectible {
-    //indicates if the pellet is collected
     private boolean collected = false;
-    //value of the pellet
     private int value;
 
-    //constructor initializes pellet with a value
+    //initialises pellet with a value
     public Pellet(int value) {
         this.value = value;
     }

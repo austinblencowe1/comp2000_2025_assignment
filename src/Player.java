@@ -1,18 +1,13 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-//represents the player character
 public class Player extends Bird implements KeyListener {
-    //current column of the player
     private int col;
-    //current row of the player
     private int row;
-    //reference to the game grid
     private Grid grid;
-    //player's score
     private int score = 0;
 
-    //constructor initializes player position
+    //initialises player position
     public Player(int col, int row, Grid grid) {
         super(grid.cellAtColRow(col, row).get());
         this.col = col;
@@ -25,10 +20,12 @@ public class Player extends Bird implements KeyListener {
         int newCol = col + dc;
         int newRow = row + dr;
 
+        //check bounds and wall collisions
         if (grid.cellAtColRow(newCol, newRow).isPresent() &&
             !(grid.cellAtColRow(newCol, newRow).get() instanceof WallCell)) {
             col = newCol;
             row = newRow;
+            //update player cell and check for pellet
             setCell(grid.cellAtColRow(col, row).get());
             Cell current = grid.cellAtColRow(col, row).get();
             if (current instanceof PelletCell pelletCell && pelletCell.hasPellet()) {
@@ -52,10 +49,8 @@ public class Player extends Bird implements KeyListener {
 
     //empty tick method for player
     @Override
-    public void tick() {
-        //no action needed
-    }
-
+    public void tick() {}
+    
     //handles key press events for movement
     @Override
     public void keyPressed(KeyEvent e) {

@@ -7,13 +7,7 @@ public class PelletCell extends Cell {
     //pellet in this cell
     private Pellet pellet;
 
-    //constructor initializes pellet cell with a value
-    public PelletCell(int col, int row, Grid grid, int value) {
-        super(col, row, grid);
-        pellet = new Pellet(value);
-    }
-
-    //constructor initializes pellet cell with collected state
+    //initialises pellet cell with value
     public PelletCell(int col, int row, Grid grid, int value, boolean collected) {
         super(col, row, grid);
         pellet = new Pellet(value);
@@ -36,7 +30,7 @@ public class PelletCell extends Cell {
         return 0;
     }
 
-    //paints the cell and pellet if present
+    //paints the pellet cell
     @Override
     public void paint(Graphics g, Point mousePos) {
         g.setColor(Color.WHITE);
@@ -44,6 +38,7 @@ public class PelletCell extends Cell {
         g.setColor(Color.BLACK);
         g.drawRect(x, y, size, size);
 
+        //draw pellet if not collected
         if (hasPellet()) {
             int cx = x + size / 2;
             int cy = y + size / 2;

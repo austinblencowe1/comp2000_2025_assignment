@@ -2,14 +2,11 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Optional;
 
-//represents the game grid of cells
 public class Grid {
-    //2d array of cells (20x20)
+    //2d array of cells
     Cell[][] cells = new Cell[20][20];
-    //total number of uncollected pellets
     int totalPellets = 0;
 
-    //constructor initializes the grid layout
     public Grid() {
         int[][] layout = {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -34,22 +31,22 @@ public class Grid {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
         };
 
-        //initialize cells based on layout
+        //initialise cells based on layout
         for (int r = 0; r < 20; r++) {
             for (int c = 0; c < 20; c++) {
                 if (layout[r][c] == 1) {
                     cells[c][r] = new WallCell(c, r, this);
                 } else {
-                    cells[c][r] = new PelletCell(c, r, this, 10);
+                    cells[c][r] = new PelletCell(c, r, this, 10, false);
                     totalPellets++;
                 }
             }
         }
 
         //set starting positions as empty pellet cells
-        cells[1][1] = new PelletCell(1, 1, this, 10); //player start
-        cells[18][1] = new PelletCell(18, 1, this, 10); //ghost 1 start
-        cells[18][18] = new PelletCell(18, 18, this, 10); //ghost 2 start
+        cells[1][1] = new PelletCell(1, 1, this, 10, true); //player start
+        cells[18][1] = new PelletCell(18, 1, this, 10, true); //ghost 1 start
+        cells[18][18] = new PelletCell(18, 18, this, 10, true); //ghost 2 start
     }
 
     //paints all cells in the grid

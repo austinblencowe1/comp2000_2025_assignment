@@ -4,13 +4,10 @@ import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
-//abstract base class for game actors (player, ghosts)
+
 public abstract class Actor implements Moveable {
-    //list of polygons defining the actor's shape
     protected List<Polygon> polygons;
-    //current cell location of the actor
     protected Cell loc;
-    //main body color of the actor
     protected Color bodyColor;
 
     //constructor initializes actor with a body color
@@ -19,7 +16,7 @@ public abstract class Actor implements Moveable {
         this.bodyColor = bodyColor;
     }
 
-    //paints the actor's polygons with appropriate colors
+    //paints the actor by drawing its polygons
     public void paint(Graphics g) {
         for (Polygon polygon : polygons) {
             g.setColor(getPolygonColor(polygon));
@@ -39,12 +36,12 @@ public abstract class Actor implements Moveable {
     //gets the current cell of the actor
     public Cell getCell() { return loc; }
 
-    //sets the actor's cell and rebuilds polygons
+    //sets the actors cell and rebuilds polygons
     public void setCell(Cell c) {
         this.loc = c;
         rebuildPolygons();
     }
 
-    //rebuilds the actor's polygons based on its current cell
+    //rebuilds the actors polygons based on its current cell
     protected abstract void rebuildPolygons();
 }

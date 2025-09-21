@@ -1,18 +1,19 @@
 import java.awt.Graphics;
 import java.util.*;
 
-//represents a ghost that chases the player
 public class Ghost {
-    //current column of the ghost
+
+    //current column
     private int col;
-    //current row of the ghost
+    //current row
     private int row;
-    //actor sprite for the ghost (cat or dog)
+
+    //actor sprite (cat or dog)
     private Actor sprite;
-    //reference to the game grid
+
     private Grid grid;
 
-    //constructor initializes ghost position and sprite
+    //initialises ghost position and sprite
     public Ghost(int col, int row, Grid grid, Actor sprite) {
         this.col = col;
         this.row = row;
@@ -20,7 +21,7 @@ public class Ghost {
         this.sprite = sprite;
     }
 
-    //updates ghost position to chase the player
+    //updates ghost position
     public void tick(int playerCol, int playerRow) {
         int[] nextStep = findNextStep(playerCol, playerRow);
         if (nextStep != null) {
@@ -29,28 +30,34 @@ public class Ghost {
         }
     }
 
-    //finds the next step towards the player using bfs
+    //bfs to find next move towards player
     private int[] findNextStep(int targetCol, int targetRow) {
+        //bfs setup
         boolean[][] visited = new boolean[20][20];
         int[][] prevCol = new int[20][20];
         int[][] prevRow = new int[20][20];
 
+        //initialise prev arrays
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{col, row});
         visited[row][col] = true;
 
+        //directions arrays
         int[] dr = {-1, 1, 0, 0};
         int[] dc = {0, 0, -1, 1};
 
+        //bfs loop
         while (!queue.isEmpty()) {
             int[] cur = queue.poll();
             int c = cur[0], r = cur[1];
             if (c == targetCol && r == targetRow) break;
 
+            //explore neighbors
             for (int i = 0; i < 4; i++) {
                 int nc = c + dc[i];
                 int nr = r + dr[i];
 
+                //check bounds and if visited or wall
                 if (nc >= 0 && nc < 20 && nr >= 0 && nr < 20 &&
                     !visited[nr][nc] &&
                     !(grid.cellAtColRow(nc, nr).get() instanceof WallCell)) {
@@ -62,8 +69,10 @@ public class Ghost {
             }
         }
 
+        //reconstruct path
         if (!visited[targetRow][targetCol]) return null;
 
+        //backtrack to find next step
         int c = targetCol;
         int r = targetRow;
         while (prevCol[r][c] != col || prevRow[r][c] != row) {
@@ -75,7 +84,7 @@ public class Ghost {
         return new int[]{c, r};
     }
 
-    //paints the ghost's sprite
+    //paints the ghosts sprite
     public void paint(Graphics g) {
         sprite.setCell(grid.cellAtColRow(col, row).get());
         sprite.paint(g);
