@@ -5,22 +5,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Actor {
-  List<Polygon> polygons;
-  Cell loc;
-  Color color;
+    static class ColoredPolygon {
+        Polygon polygon;
+        Color color;
 
-  public Actor() {
-    polygons = new ArrayList<>();
-  }
+        ColoredPolygon(Polygon polygon, Color color) {
+            this.polygon = polygon;
+            this.color = color;
+        }
+    }
 
-  public void paint(Graphics g) {
-    g.setColor(color);
-    for (Polygon polygon : polygons) {
-      g.fillPolygon(polygon);
+    List<ColoredPolygon> polygons;
+    Cell loc;
+
+    public Actor() {
+        polygons = new ArrayList<>();
     }
-    g.setColor(Color.BLACK);
-    for (Polygon polygon : polygons) {
-      g.drawPolygon(polygon);
+
+    public void paint(Graphics g) {
+        for (ColoredPolygon cp : polygons) {
+            g.setColor(cp.color);
+            g.fillPolygon(cp.polygon);
+            g.setColor(Color.BLACK); // outline in black
+            g.drawPolygon(cp.polygon);
+        }
     }
-  }
+
+    public Cell getCell() { return loc; }
+
+    public void setCell(Cell c) {
+        this.loc = c;
+        rebuildPolygons();
+    }
+
+    // rebuild when loc changes
+    protected abstract void rebuildPolygons();
 }

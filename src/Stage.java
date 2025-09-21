@@ -2,45 +2,97 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Stage {
-  Grid grid;
-  List<Actor> actors;
+    Grid grid;
+    Player player;
+    List<Ghost> ghosts;
+    boolean gameOver = false;
+    boolean gameWon = false;
+    int tickCounter = 0;
 
-  public Stage() {
-    grid = new Grid();
-    actors = new ArrayList<>();
-    actors.add(new Cat(grid.cellAtColRow(0, 0).orElseThrow()));
-    actors.add(new Dog(grid.cellAtColRow(0, 15).orElseThrow()));
-    actors.add(new Bird(grid.cellAtColRow(12, 9).orElseThrow()));
-  }
+    long startTime;  // game start
+    long endTime;    // freeze at win/lose
 
-  public void paint(Graphics g, Point mouseLoc) {
-    grid.paint(g, mouseLoc);
-    for (Actor actor : actors) {
-      actor.paint(g);
+    int ghostSpeed = 15;
+
+    public Stage() {
+        grid = new Grid();
+        player = new Player(1, 1, grid);
+
+        ghosts = new ArrayList<>();
+        ghosts.add(new Ghost(18, 1, grid, new Cat(grid.cellAtColRow(18,1).get())));
+        ghosts.add(new Ghost(18, 18, grid, new Dog(grid.cellAtColRow(18,18).get())));
+
+        startTime = System.currentTimeMillis(); // start timer when game created
     }
 
-
-
-    Optional<Cell> cell = grid.cellAtPoint(mouseLoc);
-    if (cell.isPresent()) {
-      Cell c = cell.get();
-      int col = (c.x - 10) / Cell.size;
-      int row = (c.y - 10) / Cell.size;
-      
-      String cellType = "Empty Cell";
-      for (Actor actor : actors) {
-        if (actor.loc == c) {
-          cellType = actor.getClass().getSimpleName();
-          break;
+    public void tick() {
+        if (gameOver || gameWon) {
+            if (endTime == 0) endTime = System.currentTimeMillis(); // freeze timer
+            return;
         }
-      }
-      g.setColor(java.awt.Color.BLACK);
-      g.drawString("Cell Type: " + cellType, 730, 50);
-      g.drawString("Column: " + col, 730, 70);
-      g.drawString("Row: " + row, 730, 90);
+
+        tickCounter++;
+        if (tickCounter % ghostSpeed == 0) {
+            for (Ghost ghost : ghosts) {
+                ghost.tick(player.getCol(), player.getRow());
+                if (ghost.getCol() == player.getCol() && ghost.getRow() == player.getRow()) {
+                    gameOver = true;
+                }
+            }
+        }
+
+        // check win
+        boolean anyPelletsLeft = false;
+        for (int c = 0; c < 20; c++) {
+            for (int r = 0; r < 20; r++) {
+                if (grid.cellAtColRow(c, r).get() instanceof PelletCell pelletCell && pelletCell.hasPellet()) {
+                    anyPelletsLeft = true;
+                    break;
+                }
+            }
+            if (anyPelletsLeft) break;
+        }
+        if (!anyPelletsLeft) gameWon = true;
     }
-  }
+
+    public void paint(Graphics g, Point mousePos) {
+        grid.paint(g, mousePos);
+        player.paint(g);
+        for (Ghost ghost : ghosts) ghost.paint(g);
+
+        g.setColor(java.awt.Color.BLACK);
+        g.drawString("Score: " + player.getScore(), 730, 50);
+
+        // calculate elapsed time
+        long now = (gameOver || gameWon) ? endTime : System.currentTimeMillis();
+        long elapsedMs = now - startTime;
+
+        int minutes = (int)(elapsedMs / 60000);
+        int seconds = (int)((elapsedMs / 1000) % 60);
+        int millis  = (int)(elapsedMs % 1000);
+
+        String timeString = String.format("%02d:%02d:%03d", minutes, seconds, millis);
+
+        g.drawString("Time: " + timeString, 730, 70);
+
+        // show ghost speed
+        g.drawString("Ghost Speed: " + ghostSpeed, 730, 90);
+
+        if (gameOver) {
+            g.drawString("GAME OVER!", 730, 120);
+        } else if (gameWon) {
+            g.drawString("YOU WIN!", 730, 120);
+        }
+    }
+
+    public Player getPlayer() { return player; }
+    public boolean isGameOver() { return gameOver; }
+    public boolean isGameWon() { return gameWon; }
+
+    // new method to change ghost speed mid-game
+    public void setGhostSpeed(int speed) {
+        if (speed > 0) ghostSpeed = speed;
+    }
 }

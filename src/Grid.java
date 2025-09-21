@@ -3,41 +3,76 @@ import java.awt.Point;
 import java.util.Optional;
 
 public class Grid {
-  Cell[][] cells = new Cell[20][20];
-  
-  public Grid() {
-    for(int i=0; i<cells.length; i++) {
-      for(int j=0; j<cells[i].length; j++) {
-        cells[i][j] = new Cell(10+Cell.size*i, 10+Cell.size*j);
-      }
-    }
-  }
+    Cell[][] cells = new Cell[20][20];
 
-  public void paint(Graphics g, Point mousePos) {
-    for(int i=0; i<cells.length; i++) {
-      for(int j=0; j<cells[i].length; j++) {
-        cells[i][j].paint(g, mousePos);
-      }
-    }
-  }
+    public Grid() {
+        // 0 = empty, 1 = wall
+        int[][] layout = {
+            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+            {1,0,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1},
+            {1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,1,0,1},
+            {1,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1},
+            {1,0,1,1,1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1},
+            {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1},
+            {1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1,1,0,1},
+            {1,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1},
+            {1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
+            {1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1},
+            {1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,0,1},
+            {1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,0,1},
+            {1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1,0,1,0,1},
+            {1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,1,1,1,1,0,1,1,1,1,1,0,1,1,1,1,0,1},
+            {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
+            {1,0,1,1,1,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1},
+            {1,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1},
+            {1,0,0,0,0,0,1,1,1,1,0,0,0,1,1,1,0,0,0,1},
+            {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+        };
 
-  public Optional<Cell> cellAtColRow(int c, int r) {
-    if (c >= 0 && c < cells.length && r >= 0 && r < cells[0].length) {
-      return Optional.of(cells[c][r]);
-    }
-    return Optional.empty();
-  }
+        for (int r = 0; r < 20; r++) {
+            for (int c = 0; c < 20; c++) {
+                int px = 10 + c * Cell.size;
+                int py = 10 + r * Cell.size;
+                if (layout[r][c] == 1) {
+                    cells[c][r] = new WallCell(px, py);
+                } else {
+                    //cells[c][r] = new PelletCell(px, py, 10);
+                    String type;
+                    int rand = (int)(Math.random() * 5);
+                    switch (rand) {
+                        case 0 -> type = "nut";
+                        case 1 -> type = "bolt";
+                        case 2 -> type = "turbo";
+                        case 3 -> type = "petrol";
+                        case 4 -> type = "cash";
+                        default -> type = "nut";
+                    }
+                    cells[c][r] = new PelletCell(px, py, 10, type);
+                }
+            }
+        }
 
-  public Optional<Cell> cellAtPoint(Point p) {
-    if (p == null) {
-      return Optional.empty();
+        // player spawn
+        cells[1][1] = new Cell(10 + 1 * Cell.size, 10 + 1 * Cell.size);
+
+        // Optional: ghost spawn points
+        cells[18][1] = new Cell(10 + 18 * Cell.size, 10 + 1 * Cell.size);
+        cells[18][18] = new Cell(10 + 18 * Cell.size, 10 + 18 * Cell.size);
     }
-    int col = (p.x - 10) / Cell.size;
-    int row = (p.y - 10) / Cell.size;
-    
-    if (col >= 0 && col < cells.length && row >= 0 && row < cells[0].length) {
-      return Optional.of(cells[col][row]);
+
+    public void paint(Graphics g, Point mousePos) {
+        for (int r = 0; r < 20; r++) {
+            for (int c = 0; c < 20; c++) {
+                cells[c][r].paint(g, mousePos);
+            }
+        }
     }
-    return Optional.empty();
-  }
+
+    public Optional<Cell> cellAtColRow(int c, int r) {
+        if (c >= 0 && c < 20 && r >= 0 && r < 20) {
+            return Optional.of(cells[c][r]);
+        }
+        return Optional.empty();
+    }
 }

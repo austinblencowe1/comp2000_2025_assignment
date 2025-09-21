@@ -1,52 +1,57 @@
 import java.awt.Color;
 import java.awt.Polygon;
-import java.util.ArrayList;
 
 public class Bird extends Actor {
-  public Bird(Cell inLoc) {
-    loc = inLoc;
-    color = Color.GREEN;
-    polygons = new ArrayList<>();
-    
-    //body
-    Polygon body = new Polygon();
-    body.addPoint(loc.x + 12, loc.y + 10);
-    body.addPoint(loc.x + 22, loc.y + 10);
-    body.addPoint(loc.x + 24, loc.y + 15);
-    body.addPoint(loc.x + 22, loc.y + 20);
-    body.addPoint(loc.x + 12, loc.y + 20);
-    body.addPoint(loc.x + 10, loc.y + 15);
-    
-    //left wing 
-    Polygon wing1 = new Polygon();
-    wing1.addPoint(loc.x + 10, loc.y + 12);
-    wing1.addPoint(loc.x + 5, loc.y + 8);
-    wing1.addPoint(loc.x + 5, loc.y + 18);
-    wing1.addPoint(loc.x + 10, loc.y + 15);
-    
-    //right wing 
-    Polygon wing2 = new Polygon();
-    wing2.addPoint(loc.x + 24, loc.y + 12);
-    wing2.addPoint(loc.x + 29, loc.y + 8);
-    wing2.addPoint(loc.x + 29, loc.y + 18);
-    wing2.addPoint(loc.x + 24, loc.y + 15);
-    
-    //beak
-    Polygon beak = new Polygon();
-    beak.addPoint(loc.x + 22, loc.y + 13);
-    beak.addPoint(loc.x + 27, loc.y + 15);
-    beak.addPoint(loc.x + 22, loc.y + 17);
-    
-    //eye
-    Polygon eye = new Polygon();
-    eye.addPoint(loc.x + 18, loc.y + 12);
-    eye.addPoint(loc.x + 20, loc.y + 12);
-    eye.addPoint(loc.x + 19, loc.y + 15);
+    public Bird(Cell inLoc) {
+        this.loc = inLoc;
+        rebuildPolygons();
+    }
 
-    polygons.add(body);
-    polygons.add(wing1);
-    polygons.add(wing2);
-    polygons.add(beak);
-    polygons.add(eye);
-  }
+    @Override
+    protected void rebuildPolygons() {
+        polygons.clear();
+
+        int x = loc.x;
+        int y = loc.y;
+
+        // Car body
+        Polygon body = new Polygon();
+        body.addPoint(x + 5,  y + 19);
+        body.addPoint(x + 25, y + 20);
+        body.addPoint(x + 25, y + 25);
+        body.addPoint(x + 5,  y + 25);
+        polygons.add(new ColoredPolygon(body, Color.GRAY));
+
+        // Car roof 
+        Polygon roof = new Polygon();
+        roof.addPoint(x + 8,  y + 19);
+        roof.addPoint(x + 22, y + 20);
+        roof.addPoint(x + 18, y + 15);
+        roof.addPoint(x + 12, y + 15);
+        polygons.add(new ColoredPolygon(roof, Color.WHITE));
+
+        // Left wheel 
+        Polygon wheel1 = new Polygon();
+        wheel1.addPoint(x + 6,  y + 25);
+        wheel1.addPoint(x + 10, y + 25);
+        wheel1.addPoint(x + 10, y + 28);
+        wheel1.addPoint(x + 6,  y + 28);
+        polygons.add(new ColoredPolygon(wheel1, Color.BLACK));
+
+        // Right wheel 
+        Polygon wheel2 = new Polygon();
+        wheel2.addPoint(x + 20, y + 25);
+        wheel2.addPoint(x + 24, y + 25);
+        wheel2.addPoint(x + 24, y + 28);
+        wheel2.addPoint(x + 20, y + 28);
+        polygons.add(new ColoredPolygon(wheel2, Color.BLACK));
+
+        // Rear Spoiler 
+        Polygon spoiler = new Polygon();
+        spoiler.addPoint(x + 3, y + 15);
+        spoiler.addPoint(x + 5, y + 16);
+        spoiler.addPoint(x + 5, y + 20);
+        spoiler.addPoint(x + 4, y + 20);
+        polygons.add(new ColoredPolygon(spoiler, Color.GRAY));
+    }
 }
