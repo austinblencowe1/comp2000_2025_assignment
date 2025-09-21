@@ -4,7 +4,7 @@ import java.awt.Polygon;
 public class Bird extends Actor {
 
 
-    //constructor initializes bird at a given cell
+    //initialises at a given cell
     public Bird(Cell inLoc) {
         super(Color.RED);
         this.loc = inLoc;

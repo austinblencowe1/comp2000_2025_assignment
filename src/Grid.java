@@ -3,9 +3,8 @@ import java.awt.Point;
 import java.util.Optional;
 
 public class Grid {
-    //2d array of cells
     Cell[][] cells = new Cell[20][20];
-    int totalPellets = 0;
+    int totalCollectibles = 0;
 
     public Grid() {
         int[][] layout = {
@@ -31,25 +30,24 @@ public class Grid {
             {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
         };
 
-        //initialise cells based on layout
         for (int r = 0; r < 20; r++) {
             for (int c = 0; c < 20; c++) {
                 if (layout[r][c] == 1) {
                     cells[c][r] = new WallCell(c, r, this);
                 } else {
                     cells[c][r] = new PelletCell(c, r, this, 10, false);
-                    totalPellets++;
+                    totalCollectibles++;
                 }
             }
         }
 
-        //set starting positions as empty pellet cells
-        cells[1][1] = new PelletCell(1, 1, this, 10, true); //player start
-        cells[18][1] = new PelletCell(18, 1, this, 10, true); //ghost 1 start
-        cells[18][18] = new PelletCell(18, 18, this, 10, true); //ghost 2 start
+        //set power pellets at specific locations
+        cells[1][1] = new PowerPelletCell(1, 1, this, 50, false);
+        cells[18][1] = new PowerPelletCell(18, 1, this, 50, false);
+        cells[18][18] = new PowerPelletCell(18, 18, this, 50, false);
+        cells[1][18] = new PowerPelletCell(1, 18, this, 50, false);
     }
 
-    //paints all cells in the grid
     public void paint(Graphics g, Point mousePos) {
         for (int r = 0; r < 20; r++) {
             for (int c = 0; c < 20; c++) {
@@ -58,7 +56,6 @@ public class Grid {
         }
     }
 
-    //gets the cell at a specific column and row
     public Optional<Cell> cellAtColRow(int c, int r) {
         if (c >= 0 && c < 20 && r >= 0 && r < 20) {
             return Optional.of(cells[c][r]);
@@ -66,13 +63,13 @@ public class Grid {
         return Optional.empty();
     }
 
-    //gets the total number of uncollected pellets
-    public int getTotalPellets() {
-        return totalPellets;
+    //gets the total number of uncollected collectibles
+    public int getTotalCollectibles() {
+        return totalCollectibles;
     }
 
-    //decrements the pellet count when one is collected
-    public void decrementPellets() {
-        totalPellets--;
+    //decrements the collectible count when one is collected
+    public void decrementCollectibles() {
+        totalCollectibles--;
     }
 }

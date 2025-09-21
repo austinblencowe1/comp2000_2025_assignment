@@ -1,4 +1,3 @@
-//interface for collectible items (pellets)
 public interface Collectible {
     //gets the value of the collectible
     int getValue();

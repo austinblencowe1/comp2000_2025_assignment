@@ -6,52 +6,48 @@ public class Player extends Bird implements KeyListener {
     private int row;
     private Grid grid;
     private int score = 0;
+    private Stage stage;
 
-    //initialises player position
-    public Player(int col, int row, Grid grid) {
+    //initializes player with position and stage reference
+    public Player(int col, int row, Grid grid, Stage stage) {
         super(grid.cellAtColRow(col, row).get());
         this.col = col;
         this.row = row;
         this.grid = grid;
+        this.stage = stage;
     }
 
-    //moves the player in a given direction
     private void move(int dc, int dr) {
         int newCol = col + dc;
         int newRow = row + dr;
 
-        //check bounds and wall collisions
         if (grid.cellAtColRow(newCol, newRow).isPresent() &&
             !(grid.cellAtColRow(newCol, newRow).get() instanceof WallCell)) {
             col = newCol;
             row = newRow;
-            //update player cell and check for pellet
             setCell(grid.cellAtColRow(col, row).get());
             Cell current = grid.cellAtColRow(col, row).get();
-            if (current instanceof PelletCell pelletCell && pelletCell.hasPellet()) {
-                int value = pelletCell.takePellet();
+            if (current instanceof PelletCell pelletCell && pelletCell.hasCollectible()) {
+                int value = pelletCell.takeCollectible();
                 score += value;
+                if (current instanceof PowerPelletCell) {
+                    stage.activatePowerPellet();
+                }
             }
         }
     }
 
-    //increments the player's score
     public void incrementScore(int amount) { score += amount; }
 
-    //gets the current column
     public int getCol() { return col; }
 
-    //gets the current row
     public int getRow() { return row; }
 
-    //gets the player's score
     public int getScore() { return score; }
 
-    //empty tick method for player
     @Override
     public void tick() {}
-    
-    //handles key press events for movement
+
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -62,11 +58,9 @@ public class Player extends Bird implements KeyListener {
         }
     }
 
-    //empty key released handler
     @Override
     public void keyReleased(KeyEvent e) {}
 
-    //empty key typed handler
     @Override
     public void keyTyped(KeyEvent e) {}
 }

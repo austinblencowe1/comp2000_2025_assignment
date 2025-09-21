@@ -3,7 +3,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-//base class for grid cells
+
 public class Cell extends Rectangle {
 
     //size of each cell (35x35 pixels)

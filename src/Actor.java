@@ -10,7 +10,7 @@ public abstract class Actor implements Moveable {
     protected Cell loc;
     protected Color bodyColor;
 
-    //constructor initializes actor with a body color
+    //constructor initialises actor
     public Actor(Color bodyColor) {
         this.polygons = new ArrayList<>();
         this.bodyColor = bodyColor;
