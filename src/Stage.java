@@ -3,28 +3,25 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-//manages the game state and rendering
 public class Stage {
-    //game grid
     Grid grid;
-    //player character
+    
     Player player;
-    //list of ghosts
     List<Ghost> ghosts;
-    //indicates if the game is over
+    
     boolean gameOver = false;
-    //indicates if the game is won
     boolean gameWon = false;
-    //counts game ticks for ghost movement
+    
     int tickCounter = 0;
-    //start time of the game
+    
     Long startTime;
-    //end time of the game
     Long endTime;
-    //controls ghost movement speed
+    
     int ghostSpeed = 15;
 
-    //constructor initializes the game
+    
+
+    //initialises the game stage
     public Stage() {
         grid = new Grid();
         player = new Player(1, 1, grid);
@@ -36,11 +33,13 @@ public class Stage {
 
     //updates game state each tick
     public void tick() {
+        //stop updates if game over or won
         if (gameOver || gameWon) {
             if (endTime == null) endTime = System.currentTimeMillis();
             return;
         }
 
+        //increase tick counter and move ghosts based on speed
         tickCounter++;
         if (tickCounter % ghostSpeed == 0) {
             for (Ghost ghost : ghosts) {
@@ -51,6 +50,7 @@ public class Stage {
             }
         }
 
+        //check if win
         if (grid.getTotalPellets() == 0) gameWon = true;
     }
 
@@ -60,9 +60,11 @@ public class Stage {
         player.paint(g);
         for (Ghost ghost : ghosts) ghost.paint(g);
 
+        //draw UI
         g.setColor(java.awt.Color.BLACK);
         g.drawString("Score: " + player.getScore(), 730, 50);
 
+        //draw timer
         long now = (gameOver || gameWon) ? endTime : System.currentTimeMillis();
         long elapsedMs = now - startTime;
 
@@ -74,6 +76,7 @@ public class Stage {
         g.drawString("Time: " + timeString, 730, 70);
         g.drawString("Ghost Speed: " + ghostSpeed, 730, 90);
 
+        //draw game over/win message
         if (gameOver) {
             g.drawString("GAME OVER!", 730, 120);
         } else if (gameWon) {
