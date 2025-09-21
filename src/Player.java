@@ -14,36 +14,41 @@ public class Player extends Bird implements KeyListener {
     }
 
     private void move(int dc, int dr) {
-    int newCol = col + dc;
-    int newRow = row + dr;
+        int newCol = col + dc;
+        int newRow = row + dr;
 
-    // check bounds & wall collision
-    if (grid.cellAtColRow(newCol, newRow).isPresent() &&
-        !(grid.cellAtColRow(newCol, newRow).get() instanceof WallCell)) {
-
-        col = newCol;
-        row = newRow;
-
-        // update the Actor/Bird polygon positions
-        setCell(grid.cellAtColRow(col, row).get());
-
-        // **collect pellet if present**
-        Cell current = grid.cellAtColRow(col, row).get();
-        if (current instanceof PelletCell pelletCell && pelletCell.hasPellet()) {
-            int value = pelletCell.takePellet();   // get pellet value
-            score += value;                        // increment player score
+        if (grid.cellAtColRow(newCol, newRow).isPresent() &&
+            !(grid.cellAtColRow(newCol, newRow).get() instanceof WallCell)) {
+            col = newCol;
+            row = newRow;
+            setCell(grid.cellAtColRow(col, row).get());
+            Cell current = grid.cellAtColRow(col, row).get();
+            if (current instanceof PelletCell pelletCell && pelletCell.hasPellet()) {
+                int value = pelletCell.takePellet();
+                score += value;
+            }
         }
     }
-}
-
 
     public void incrementScore(int amount) { score += amount; }
 
-    public int getCol() { return col; }
-    public int getRow() { return row; }
-    public int getScore() { return score; }
+    public int getCol() { 
+        return col; 
+    }
+    
+    public int getRow() { 
+        return row; 
+    }
+    
+    public int getScore() { 
+        return score; 
+    }
 
-    // KeyListener methods
+    @Override
+    public void tick() {
+        // No action needed for Player in tick
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
@@ -54,6 +59,8 @@ public class Player extends Bird implements KeyListener {
         }
     }
 
-    @Override public void keyReleased(KeyEvent e) {}
-    @Override public void keyTyped(KeyEvent e) {}
+    @Override
+    public void keyReleased(KeyEvent e) {}
+    @Override
+    public void keyTyped(KeyEvent e) {}
 }

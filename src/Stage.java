@@ -10,26 +10,22 @@ public class Stage {
     boolean gameOver = false;
     boolean gameWon = false;
     int tickCounter = 0;
-
-    long startTime;  // game start
-    long endTime;    // freeze at win/lose
-
+    Long startTime;
+    Long endTime;
     int ghostSpeed = 15;
 
     public Stage() {
         grid = new Grid();
         player = new Player(1, 1, grid);
-
         ghosts = new ArrayList<>();
-        ghosts.add(new Ghost(18, 1, grid, new Cat(grid.cellAtColRow(18,1).get())));
-        ghosts.add(new Ghost(18, 18, grid, new Dog(grid.cellAtColRow(18,18).get())));
-
-        startTime = System.currentTimeMillis(); // start timer when game created
+        ghosts.add(new Ghost(18, 1, grid, new Cat(grid.cellAtColRow(18, 1).get())));
+        ghosts.add(new Ghost(18, 18, grid, new Dog(grid.cellAtColRow(18, 18).get())));
+        startTime = System.currentTimeMillis();
     }
 
     public void tick() {
         if (gameOver || gameWon) {
-            if (endTime == 0) endTime = System.currentTimeMillis(); // freeze timer
+            if (endTime == null) endTime = System.currentTimeMillis();
             return;
         }
 
@@ -43,18 +39,7 @@ public class Stage {
             }
         }
 
-        // check win
-        boolean anyPelletsLeft = false;
-        for (int c = 0; c < 20; c++) {
-            for (int r = 0; r < 20; r++) {
-                if (grid.cellAtColRow(c, r).get() instanceof PelletCell pelletCell && pelletCell.hasPellet()) {
-                    anyPelletsLeft = true;
-                    break;
-                }
-            }
-            if (anyPelletsLeft) break;
-        }
-        if (!anyPelletsLeft) gameWon = true;
+        if (grid.getTotalPellets() == 0) gameWon = true;
     }
 
     public void paint(Graphics g, Point mousePos) {
@@ -65,19 +50,15 @@ public class Stage {
         g.setColor(java.awt.Color.BLACK);
         g.drawString("Score: " + player.getScore(), 730, 50);
 
-        // calculate elapsed time
         long now = (gameOver || gameWon) ? endTime : System.currentTimeMillis();
         long elapsedMs = now - startTime;
 
         int minutes = (int)(elapsedMs / 60000);
         int seconds = (int)((elapsedMs / 1000) % 60);
-        int millis  = (int)(elapsedMs % 1000);
+        int millis = (int)(elapsedMs % 1000);
 
         String timeString = String.format("%02d:%02d:%03d", minutes, seconds, millis);
-
         g.drawString("Time: " + timeString, 730, 70);
-
-        // show ghost speed
         g.drawString("Ghost Speed: " + ghostSpeed, 730, 90);
 
         if (gameOver) {
@@ -91,7 +72,6 @@ public class Stage {
     public boolean isGameOver() { return gameOver; }
     public boolean isGameWon() { return gameWon; }
 
-    // new method to change ghost speed mid-game
     public void setGhostSpeed(int speed) {
         if (speed > 0) ghostSpeed = speed;
     }

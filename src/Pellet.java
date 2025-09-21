@@ -1,15 +1,23 @@
-public class Pellet {
+public class Pellet implements Collectible {
     private boolean collected = false;
+    private int value;
 
-    public Pellet() {
-        
+    public Pellet(int value) {
+        this.value = value;
     }
 
-    public boolean isCollected() {
-        return collected;
+    @Override
+    public int getValue() { 
+        return value; 
     }
 
-    public void collect() {
-        collected = true;
+    @Override
+    public boolean isCollected() { 
+        return collected; 
+    }
+
+    @Override
+    public void collect() { 
+        collected = true; 
     }
 }

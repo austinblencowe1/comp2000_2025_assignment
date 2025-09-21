@@ -3,6 +3,7 @@ import java.awt.Polygon;
 
 public class Dog extends Actor {
     public Dog(Cell inLoc) {
+        super(Color.CYAN);
         this.loc = inLoc;
         rebuildPolygons();
     }
@@ -10,56 +11,85 @@ public class Dog extends Actor {
     @Override
     protected void rebuildPolygons() {
         polygons.clear();
-
         int x = loc.x;
         int y = loc.y;
 
-        // Body (yellow)
+        // Main body
         Polygon body = new Polygon();
-        body.addPoint(x + 7,  y + 8);
-        body.addPoint(x + 27, y + 8);
-        body.addPoint(x + 27, y + 22);
-        body.addPoint(x + 7,  y + 22);
-        polygons.add(new ColoredPolygon(body, Color.YELLOW));
+        body.addPoint(x + 5, y + 19);
+        body.addPoint(x + 25, y + 19);
+        body.addPoint(x + 25, y + 25);
+        body.addPoint(x + 5, y + 25);
 
-        // Left leg (yellow)
-        Polygon leg1 = new Polygon();
-        leg1.addPoint(x + 7,  y + 8);
-        leg1.addPoint(x + 12, y + 8);
-        leg1.addPoint(x + 10, y + 15);
-        leg1.addPoint(x + 5,  y + 15);
-        polygons.add(new ColoredPolygon(leg1, Color.YELLOW));
+        // Roof
+        Polygon roof = new Polygon();
+        roof.addPoint(x + 8, y + 19);
+        roof.addPoint(x + 22, y + 19);
+        roof.addPoint(x + 18, y + 15);
+        roof.addPoint(x + 12, y + 15);
 
-        // Right leg (yellow)
-        Polygon leg2 = new Polygon();
-        leg2.addPoint(x + 27, y + 8);
-        leg2.addPoint(x + 22, y + 8);
-        leg2.addPoint(x + 24, y + 15);
-        leg2.addPoint(x + 29, y + 15);
-        polygons.add(new ColoredPolygon(leg2, Color.YELLOW));
+        // Wheel 1 
+        Polygon wheel1 = new Polygon();
+        wheel1.addPoint(x + 6, y + 25);
+        wheel1.addPoint(x + 10, y + 25);
+        wheel1.addPoint(x + 10, y + 28);
+        wheel1.addPoint(x + 6, y + 28);
 
-        // Tail (yellow)
-        Polygon tail = new Polygon();
-        tail.addPoint(x + 13, y + 22);
-        tail.addPoint(x + 21, y + 22);
-        tail.addPoint(x + 21, y + 28);
-        tail.addPoint(x + 13, y + 28);
-        polygons.add(new ColoredPolygon(tail, Color.YELLOW));
+        // Wheel 2
+        Polygon wheel2 = new Polygon();
+        wheel2.addPoint(x + 20, y + 25);
+        wheel2.addPoint(x + 24, y + 25);
+        wheel2.addPoint(x + 24, y + 28);
+        wheel2.addPoint(x + 20, y + 28);
 
-        // Eye 1 (white)
-        Polygon eye1 = new Polygon();
-        eye1.addPoint(x + 10, y + 12);
-        eye1.addPoint(x + 13, y + 12);
-        eye1.addPoint(x + 13, y + 15);
-        eye1.addPoint(x + 10, y + 15);
-        polygons.add(new ColoredPolygon(eye1, Color.WHITE));
+        // Red light
+        Polygon redLight = new Polygon();
+        redLight.addPoint(x + 16, y + 13);
+        redLight.addPoint(x + 21, y + 13);
+        redLight.addPoint(x + 21, y + 15);
+        redLight.addPoint(x + 16, y + 15);
 
-        // Eye 2 (white)
-        Polygon eye2 = new Polygon();
-        eye2.addPoint(x + 24, y + 12);
-        eye2.addPoint(x + 21, y + 12);
-        eye2.addPoint(x + 21, y + 15);
-        eye2.addPoint(x + 24, y + 15);
-        polygons.add(new ColoredPolygon(eye2, Color.WHITE));
+        // Blue light
+        Polygon blueLight = new Polygon();
+        blueLight.addPoint(x + 10, y + 13);
+        blueLight.addPoint(x + 15, y + 13);
+        blueLight.addPoint(x + 15, y + 15);
+        blueLight.addPoint(x + 10, y + 15);
+
+        polygons.add(body);
+        polygons.add(roof);
+        polygons.add(wheel1);
+        polygons.add(wheel2);
+        polygons.add(redLight);
+        polygons.add(blueLight);
+    }
+
+    @Override
+    protected Color getPolygonColor(Polygon polygon) {
+        int idx = polygons.indexOf(polygon);
+        if (idx == 0) return bodyColor; 
+        if (idx == 1) return Color.WHITE;
+        if (idx == 2 || idx == 3) return Color.BLACK;
+        if (idx == 4) return Color.RED;
+        if (idx == 5) return Color.BLUE;
+        return Color.BLACK;
+    }
+
+    @Override
+    public void moveTo(int col, int row) {
+        if (loc != null && loc.grid != null) {
+            setCell(loc.grid.cellAtColRow(col, row).get());
+        }
+    }
+
+    @Override
+    public int getCol() { return loc.col; }
+
+    @Override
+    public int getRow() { return loc.row; }
+
+    @Override
+    public void tick() {
+        // No action needed for Dog in tick
     }
 }
