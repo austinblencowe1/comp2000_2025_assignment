@@ -13,12 +13,10 @@ public class Stage {
     Long startTime;
     Long endTime;
     int ghostSpeed = 15;
-    //indicates if power pellet is active
     boolean powerPelletActive = false;
-    //remaining ticks for power pellet effect
     int powerPelletTicks = 0;
 
-    //initializes the game stage
+    //initialises the game stage
     public Stage() {
         grid = new Grid();
         player = new Player(1, 1, grid, this);
@@ -31,7 +29,7 @@ public class Stage {
     //activates power pellet effect
     public void activatePowerPellet() {
         powerPelletActive = true;
-        powerPelletTicks = 300; //15 seconds at 20ms per tick
+        powerPelletTicks = 300;
     }
 
     public void tick() {

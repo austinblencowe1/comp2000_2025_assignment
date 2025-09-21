@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 
 public class PelletCell extends Cell {
+    
     //protected to allow subclass access
     protected Collectible collectible;
 

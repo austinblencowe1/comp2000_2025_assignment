@@ -1,4 +1,3 @@
-//interface for moveable game objects
 public interface Moveable {
     //gets the current column
     int getCol();

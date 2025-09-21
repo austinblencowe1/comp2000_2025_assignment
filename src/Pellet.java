@@ -7,7 +7,7 @@ public class Pellet implements Collectible {
         this.value = value;
     }
 
-    //gets the pellet's value
+    //gets the pellet value
     @Override
     public int getValue() { return value; }
 

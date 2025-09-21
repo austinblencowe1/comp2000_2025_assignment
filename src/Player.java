@@ -8,7 +8,7 @@ public class Player extends Bird implements KeyListener {
     private int score = 0;
     private Stage stage;
 
-    //initializes player with position and stage reference
+    //initialises player with position and stage reference
     public Player(int col, int row, Grid grid, Stage stage) {
         super(grid.cellAtColRow(col, row).get());
         this.col = col;
